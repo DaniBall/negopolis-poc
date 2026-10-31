@@ -9,7 +9,7 @@ html{scroll-behavior:smooth}
 body{margin:0;font-family:var(--font);color:var(--ink);background:var(--bg);line-height:1.6;font-size:1.05rem}
 img{max-width:100%;height:auto;display:block}
 a{color:var(--brand)}
-h1,h2,h3{line-height:1.2;margin:0 0 .5em}
+h1,h2,h3{line-height:1.2;margin:0 0 .5em;overflow-wrap:break-word;hyphens:auto}
 h1{font-size:clamp(2rem,5vw,3.2rem)}
 h2{font-size:clamp(1.6rem,3.5vw,2.3rem)}
 .wrap{max-width:1140px;margin:0 auto;padding:0 16px}
@@ -38,7 +38,7 @@ h2{font-size:clamp(1.6rem,3.5vw,2.3rem)}
 .hero-imgs{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .hero-imgs img{border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.3)}
 .hero-imgs img:last-child{margin-top:40px}
-@media (max-width:860px){.hero-grid{grid-template-columns:1fr}.hero{padding:40px 0 48px}}
+@media (max-width:860px){.hero-grid{grid-template-columns:minmax(0,1fr)}.hero{padding:40px 0 48px}}
 section{padding:64px 0}
 .center{text-align:center}
 .sub{color:var(--muted);max-width:680px;margin:0 auto 32px}
@@ -68,7 +68,7 @@ details.faq summary{font-weight:800;cursor:pointer}
 .page-hero{padding:48px 0;background:var(--sky-soft)}
 .page-hero.amber{background:var(--amber-soft)}
 .two{display:grid;gap:40px;grid-template-columns:1.3fr 1fr;align-items:start}
-@media (max-width:860px){.two{grid-template-columns:1fr}}
+@media (max-width:860px){.two{grid-template-columns:minmax(0,1fr);gap:28px}}
 .gallery{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
 .gallery img{border-radius:14px}
 .info{display:flex;flex-wrap:wrap;gap:12px;margin:18px 0}
@@ -93,3 +93,5 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--sky)}
 @media (max-width:700px){.footer-grid{grid-template-columns:1fr}}
 .legal{border-top:1px solid rgba(255,255,255,.15);margin-top:24px;padding-top:16px;font-size:.9rem}
 .prose{max-width:780px}
+.two>*{min-width:0}
+@media (max-width:600px){section{padding:44px 0}.page-hero{padding:32px 0}.card,form.reg{padding:22px}.feature,.steps li{padding:20px}.cta{padding:32px 18px}.footer{padding:40px 0 20px}}
