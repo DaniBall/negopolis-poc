@@ -1,0 +1,27 @@
+---
+import Base from '../../layouts/Base.astro';
+import Cta from '../../components/Cta.astro';
+import { site, schools, activities } from '../../data/site.js';
+const towns = [...new Set(schools.map(s => s.town))];
+---
+<Base title="Colegios con extraescolares de robótica y creatividad en La Rioja" description={`Consulta en qué colegios de ${towns.join(', ')} impartimos extraescolares de robótica, videojuegos y arte para niños de 6 a 12 años.`}>
+  <section class="page-hero">
+    <div class="wrap">
+      <nav class="crumbs"><a href="/">Inicio</a> › Colegios</nav>
+      <h1>Colegios donde estamos</h1>
+      <p class="lead">Curso {site.course}. Elige tu colegio para ver la actividad disponible e inscribirte.</p>
+    </div>
+  </section>
+  {towns.map(t => (
+    <section style="padding:32px 0"><div class="wrap">
+      <h2>{t}</h2>
+      <ul class="school-list">
+        {schools.filter(s => s.town === t).map(s => (
+          <li><a href={`/colegios/${s.slug}/`}><strong>{s.name}</strong>
+            {s.activities.map(k => <span class={`tag ${activities[k].color}`}>{activities[k].short}</span>)}</a></li>
+        ))}
+      </ul>
+    </div></section>
+  ))}
+  <Cta />
+</Base>

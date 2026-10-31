@@ -1,0 +1,48 @@
+CÓDIGO DE LA NUEVA WEB - Creatividad y Videojuegos (negopolis.com)
+==================================================================
+Hecha con Astro 5 (https://astro.build). Genera una web estática (HTML).
+
+QUÉ HACE FALTA INSTALAR
+- Node.js 18.20 o superior (recomendado: la versión LTS, 20 o 22).
+  Descarga: https://nodejs.org  (incluye npm, no hay que instalarlo aparte)
+
+Librerías del proyecto (se instalan solas con "npm install"):
+- astro              -> el framework (versión 5)
+- @astrojs/sitemap   -> genera el sitemap para Google
+- sharp              -> optimiza las imágenes (viene incluido con Astro)
+
+CÓMO VERLA EN LOCAL
+1. Descomprime el zip.
+2. Abre una terminal en la carpeta "negopolis"
+   (Windows: dentro de la carpeta, escribe "cmd" en la barra de direcciones
+   y pulsa Enter. Mac: botón derecho > "Nuevo terminal en la carpeta").
+3. Instala las dependencias (solo la primera vez):
+      npm install
+4. Arranca el servidor de desarrollo:
+      npm run dev
+5. Abre en el navegador:  http://localhost:4321
+   Los cambios que hagas en el código se ven al momento.
+   Para pararlo: Ctrl+C en la terminal.
+
+OTROS COMANDOS
+   npm run build     -> genera la web final en la carpeta "dist"
+   npm run preview   -> sirve la carpeta "dist" para revisarla
+
+DÓNDE ESTÁ CADA COSA
+- src/data/site.js         -> contacto, horario, actividades, colegios y
+                              preguntas frecuentes (lo que más se edita)
+- src/pages/               -> una página por archivo (la URL sale del nombre)
+- src/layouts/Base.astro   -> cabecera, pie y etiquetas SEO comunes
+- src/components/          -> bloques reutilizables (FAQ, llamada a inscribirse)
+- src/styles/global.css    -> estilos
+- src/assets/              -> imágenes (Astro las convierte a WebP)
+- public/                  -> archivos que se copian tal cual (logo,
+                              robots.txt, _redirects con las redirecciones
+                              desde las URLs antiguas de WordPress)
+
+PENDIENTE ANTES DE PUBLICAR
+- Formulario: en src/data/site.js cambiar "formEndpoint" por la URL de un
+  servicio de formularios (p. ej. Formspree, gratuito). Ahora no envía nada.
+- Redactar src/pages/aviso-legal.astro y src/pages/privacidad.astro.
+- Publicar en Netlify o Cloudflare Pages (gratis): comando de build
+  "npm run build", carpeta de salida "dist".

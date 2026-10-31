@@ -1,0 +1,70 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Cta from '../../components/Cta.astro';
+import Faq from '../../components/Faq.astro';
+import { site, activities, schools } from '../../data/site.js';
+import cartelC from '../../assets/cartel-creatividad.png';
+import cartelR from '../../assets/cartel-robotica.png';
+import historias from '../../assets/historias.png';
+import dibujo from '../../assets/dibujo.png';
+import color from '../../assets/color.png';
+import arcilla from '../../assets/arcilla.png';
+
+export function getStaticPaths() {
+  return Object.entries(activities).map(([key, a]) => ({ params: { slug: a.slug }, props: { key } }));
+}
+const { key } = Astro.props;
+const a = activities[key];
+const cartel = key === 'creatividad' ? cartelC : cartelR;
+const gallery = key === 'creatividad' ? [[historias,'Escriben sus propias historias'],[dibujo,'Dibujan y diseñan'],[color,'Pintan y dan vida'],[arcilla,'Modelan en arcilla']] : [];
+const where = schools.filter(s => s.activities.includes(key));
+const towns = [...new Set(where.map(s => s.town))].join(', ');
+const url = `https://negopolis.com/extraescolares/${a.slug}/`;
+const ld = [
+  { '@context':'https://schema.org','@type':'Course', name:a.name, description:a.summary, url,
+    provider:{ '@id':'https://negopolis.com/#org' }, inLanguage:'es',
+    audience:{ '@type':'EducationalAudience', educationalRole:'student', audienceType:'Niños de 6 a 12 años' },
+    hasCourseInstance: where.map(s => ({ '@type':'CourseInstance', courseMode:'onsite', location:{ '@type':'Place', name:s.name, address:{ '@type':'PostalAddress', addressLocality:s.town, addressRegion:'La Rioja', addressCountry:'ES' } } })) },
+  { '@context':'https://schema.org','@type':'BreadcrumbList', itemListElement:[
+    { '@type':'ListItem', position:1, name:'Inicio', item:'https://negopolis.com/' },
+    { '@type':'ListItem', position:2, name:a.name, item:url } ] },
+];
+---
+<Base title={`Extraescolar de ${a.name} para niños`} description={`${a.summary} Para niños de 6 a 12 años en ${towns}. Horario ${site.schedule}.`} jsonld={ld}>
+  <section class={`page-hero ${a.color}`}>
+    <div class="wrap two">
+      <div>
+        <nav class="crumbs" aria-label="Migas de pan"><a href="/">Inicio</a> › {a.name}</nav>
+        <h1>Extraescolar de {a.name}</h1>
+        <p class="lead">{a.summary}</p>
+        <div class="info"><span>Edades: {site.ages}</span><span>Horario: {site.schedule}</span></div>
+        <a class="btn" href={`/inscripcion/?actividad=${a.slug}`}>Inscribirme</a>
+      </div>
+      <Image src={cartel} alt={`Cartel de la extraescolar ${a.name}`} widths={[360,720]} sizes="(max-width:860px) 90vw, 420px" loading="eager" style="border-radius:16px;max-width:420px;margin:auto" />
+    </div>
+  </section>
+  <section>
+    <div class="wrap">
+      <h2 class="center">Qué hacen</h2>
+      <div class="features">
+        {a.points.map(([i, t, d]) => <div class="feature"><h3>{t}</h3><p>{d}</p></div>)}
+      </div>
+      {gallery.length > 0 && (
+        <div class="gallery" style="margin-top:40px">
+          {gallery.map(([img, alt]) => <Image src={img} alt={`${alt}: actividad de la extraescolar de creatividad`} widths={[400,800]} sizes="(max-width:600px) 90vw, 540px" />)}
+        </div>
+      )}
+    </div>
+  </section>
+  <section class="alt">
+    <div class="wrap">
+      <h2 class="center">Dónde se imparte</h2>
+      <ul class="school-list">
+        {where.map(s => <li><a href={`/colegios/${s.slug}/`}><strong>{s.name}</strong><small>{s.town}</small></a></li>)}
+      </ul>
+    </div>
+  </section>
+  <Faq />
+  <Cta href={`/inscripcion/?actividad=${a.slug}`} />
+</Base>

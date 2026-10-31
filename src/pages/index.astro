@@ -1,0 +1,84 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Faq from '../components/Faq.astro';
+import Cta from '../components/Cta.astro';
+import { site, activities, schools, faqs } from '../data/site.js';
+import cartelC from '../assets/cartel-creatividad.png';
+import cartelR from '../assets/cartel-robotica.png';
+const towns = [...new Set(schools.map(s => s.town))];
+const faqLd = { '@context':'https://schema.org','@type':'FAQPage', mainEntity: faqs.map(([q,a]) => ({ '@type':'Question', name:q, acceptedAnswer:{ '@type':'Answer', text:a } })) };
+---
+<Base
+  title={`Extraescolares de robótica, videojuegos y arte en La Rioja | ${site.name}`}
+  description={`Actividades extraescolares para niños de 6 a 12 años en colegios de ${towns.join(', ')}: robótica, programación de videojuegos, creatividad y arte. Inscripción online.`}
+  jsonld={[faqLd]}
+>
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <h1>Extraescolares de creatividad, robótica y videojuegos</h1>
+        <p class="lead">Actividades para niños y niñas de 6 a 12 años en colegios de La Rioja.</p>
+        <div class="hero-badges">
+          <span class="badge">{site.ages}</span>
+          <span class="badge">{site.schedule}</span>
+          <span class="badge">{schools.length} colegios</span>
+        </div>
+        <a class="btn" href="/inscripcion/">Inscríbete ahora</a>
+        <a class="btn btn-ghost" href="#actividades" style="margin-left:8px">Ver actividades</a>
+      </div>
+      <div class="hero-imgs">
+        <Image src={cartelC} alt="Cartel de la extraescolar Creatividad, Arte y Diseño de Juegos" widths={[300,600]} sizes="(max-width:860px) 45vw, 260px" loading="eager" />
+        <Image src={cartelR} alt="Cartel de la extraescolar Robótica y Videojuegos" widths={[300,600]} sizes="(max-width:860px) 45vw, 260px" loading="eager" />
+      </div>
+    </div>
+  </section>
+
+  <section id="actividades">
+    <div class="wrap">
+      <h2 class="center">Aquí eliges cómo quiere crear tu hijo/a este curso</h2>
+      <div class="cards">
+        {Object.values(activities).map(a => (
+          <article class={`card ${a.color}`}>
+            <h3>{a.name}</h3>
+            <p>{a.summary}</p>
+            <ul>{a.points.map(([i, t]) => <li>{t}</li>)}</ul>
+            <div class="actions">
+              <a class="btn" href={`/inscripcion/?actividad=${a.slug}`}>Inscribirme</a>
+              <a class="btn btn-ghost" href={`/extraescolares/${a.slug}/`}>Ver actividad</a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="alt">
+    <div class="wrap">
+      <h2 class="center">Inscripción</h2>
+      <ol class="steps">
+        <li>Elige tu colegio y la actividad.</li>
+        <li>Rellena el formulario con los datos del alumno.</li>
+        <li>Te mandaremos un correo de confirmación.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2 class="center">Colegios donde estamos</h2>
+      <p class="sub center">Curso {site.course}</p>
+      <ul class="school-list">
+        {schools.map(s => (
+          <li><a href={`/colegios/${s.slug}/`}>
+            <strong>{s.name}</strong><small>{s.town}</small>
+            {s.activities.map(k => <span class={`tag ${activities[k].color}`}>{activities[k].short}</span>)}
+          </a></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <div class="alt"><Faq /></div>
+  <Cta />
+</Base>

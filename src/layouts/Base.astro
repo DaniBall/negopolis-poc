@@ -1,0 +1,86 @@
+---
+import { site } from '../data/site.js';
+import '../styles/global.css';
+interface Props { title: string; description: string; jsonld?: object[]; image?: string; }
+const { title, description, jsonld = [], image = '/img/og.png' } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const fullTitle = title.includes(site.name) ? title : `${title} | ${site.name}`;
+const org = {
+  '@context': 'https://schema.org',
+  '@type': 'EducationalOrganization',
+  '@id': 'https://negopolis.com/#org',
+  name: site.name,
+  url: 'https://negopolis.com/',
+  logo: 'https://negopolis.com/img/logo.png',
+  email: site.email,
+  telephone: site.phoneIntl,
+  areaServed: { '@type': 'AdministrativeArea', name: 'La Rioja, España' },
+};
+const nav = [
+  ['/extraescolares/creatividad-arte-diseno-de-juegos/', 'Creatividad y Arte'],
+  ['/extraescolares/robotica-programacion-videojuegos/', 'Robótica y Videojuegos'],
+  ['/colegios/', 'Colegios'],
+  ['/#preguntas', 'Preguntas'],
+];
+const path = Astro.url.pathname;
+---
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{fullTitle}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  <link rel="icon" href="/img/logo.png" />
+  <meta name="theme-color" content="#0b3a53" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="es_ES" />
+  <meta property="og:site_name" content={site.name} />
+  <meta property="og:title" content={fullTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={new URL(image, Astro.site).href} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <slot name="head" />
+  <script type="application/ld+json" set:html={JSON.stringify([org, ...jsonld])} />
+</head>
+<body>
+  <a class="skip" href="#main">Saltar al contenido</a>
+  <header class="header">
+    <div class="wrap header-in">
+      <a href="/" class="brand" aria-label={`${site.name}, inicio`}>
+        <img src="/img/logo.png" alt="" width="44" height="44" />
+        <span>{site.name}</span>
+      </a>
+      <div class="menu">
+        <button class="burger" aria-expanded="false" aria-controls="nav" aria-label="Abrir menú" onclick="this.setAttribute('aria-expanded',this.getAttribute('aria-expanded')!=='true')">☰</button>
+        <nav id="nav" aria-label="Principal">
+          {nav.map(([href, label]) => <a href={href} aria-current={path === href ? 'page' : undefined}>{label}</a>)}
+          <a href="/inscripcion/" class="btn btn-sm">Inscríbete</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+  <main id="main"><slot /></main>
+  <footer class="footer">
+    <div class="wrap footer-grid">
+      <div>
+        <strong>{site.name}</strong>
+        <p>YEDAI Escuela de Robótica</p>
+      </div>
+      <div>
+        <strong>Contacto</strong>
+        <p><a href={`tel:${site.phoneIntl}`}>{site.phone}</a><br /><a href={`mailto:${site.email}`}>{site.email}</a></p>
+      </div>
+      <div>
+        <strong>Extraescolares</strong>
+        <p>{nav.slice(0, 3).map(([h, l]) => <><a href={h}>{l}</a><br /></>)}</p>
+      </div>
+    </div>
+    <div class="wrap legal">
+      © {new Date().getFullYear()} {site.name} · <a href="/aviso-legal/">Aviso legal</a> · <a href="/privacidad/">Privacidad</a>
+    </div>
+  </footer>
+</body>
+</html>

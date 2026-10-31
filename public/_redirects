@@ -1,0 +1,6 @@
+# Redirecciones 301 desde las URLs antiguas de WordPress (formato Netlify / Cloudflare Pages)
+/inicio/                       /extraescolares/robotica-programacion-videojuegos/   301
+/inicio-2/                     /extraescolares/creatividad-arte-diseno-de-juegos/   301
+/pagina-registro-general-si/   /inscripcion/                                        301
+/registro-*                    /inscripcion/                                        301
+/feed/                         /                                                    301

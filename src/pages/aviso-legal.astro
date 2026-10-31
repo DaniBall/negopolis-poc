@@ -1,0 +1,10 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site.js';
+---
+<Base title="Aviso legal" description="Aviso legal de {site.name}.">
+  <section><div class="wrap prose">
+    <h1>Aviso legal</h1>
+        <p>Contacto: <a href={`mailto:${site.email}`}>{site.email}</a></p>
+  </div></section>
+</Base>

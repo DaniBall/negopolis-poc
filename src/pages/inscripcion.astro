@@ -1,0 +1,88 @@
+---
+import Base from '../layouts/Base.astro';
+import { site, schools, activities } from '../data/site.js';
+const data = JSON.stringify(schools.map(s => ({ slug: s.slug, acts: s.activities.map(k => activities[k].slug) })));
+---
+<Base title={`Inscripción extraescolares curso ${site.course}`} description="Inscripción en las extraescolares de creatividad, robótica y videojuegos.">
+  <section class="page-hero">
+    <div class="wrap">
+      <nav class="crumbs"><a href="/">Inicio</a> › Inscripción</nav>
+      <h1>Inscripción curso {site.course}</h1>
+      <p class="lead">Cuando acabes el formulario te mandaremos un correo.</p>
+    </div>
+  </section>
+  <section>
+    <div class="wrap">
+      <form class="reg" method="POST" action={site.formEndpoint} id="reg">
+        <input type="hidden" name="_next" value="https://negopolis.com/gracias/" />
+        <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true" />
+        <fieldset>
+          <legend>1. Colegio y actividad</legend>
+          <div class="field">
+            <label for="colegio">Colegio</label>
+            <select id="colegio" name="colegio" required>
+              <option value="">Selecciona tu colegio…</option>
+              {schools.map(s => <option value={s.slug}>{s.name} ({s.town})</option>)}
+            </select>
+          </div>
+          <div class="field">
+            <label for="actividad">Actividad</label>
+            <select id="actividad" name="actividad" required>
+              {Object.values(activities).map(a => <option value={a.slug}>{a.name}</option>)}
+            </select>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>2. Datos del alumno/a</legend>
+          <div class="field"><label for="alumno">Nombre y apellidos</label><input id="alumno" name="alumno" required autocomplete="off" /></div>
+          <div class="grid2">
+            <div class="field"><label for="nacimiento">Fecha de nacimiento</label><input id="nacimiento" name="nacimiento" type="date" required /></div>
+            <div class="field"><label for="etapa">Curso</label>
+              <select id="etapa" name="etapa" required>
+                <option value="">Selecciona…</option>
+                {['1º Primaria','2º Primaria','3º Primaria','4º Primaria','5º Primaria','6º Primaria','Infantil'].map(c => <option>{c}</option>)}
+              </select></div>
+          </div>
+          <div class="field"><span class="label" style="font-weight:700">¿Hay que recogerle del comedor?</span>
+            <div class="radio"><label><input type="radio" name="comedor" value="si" required /> Sí</label><label><input type="radio" name="comedor" value="no" /> No</label></div></div>
+          <div class="field"><label for="recoge">Persona que le recogerá al terminar</label><input id="recoge" name="recoge" required /></div>
+        </fieldset>
+        <fieldset>
+          <legend>3. Datos del padre, madre o tutor</legend>
+          <div class="field"><label for="tutor">Nombre y apellidos</label><input id="tutor" name="tutor" autocomplete="name" required /></div>
+          <div class="grid2">
+            <div class="field"><label for="email">Correo electrónico</label><input id="email" name="email" type="email" autocomplete="email" required /></div>
+            <div class="field"><label for="tel">Teléfono</label><input id="tel" name="telefono" type="tel" autocomplete="tel" inputmode="tel" required /></div>
+          </div>
+          <div class="field"><span style="font-weight:700">¿Sois socios del AMPA?</span>
+            <div class="radio"><label><input type="radio" name="ampa" value="si" /> Sí</label><label><input type="radio" name="ampa" value="no" checked /> No</label></div>
+            <p class="hint">Si sois socios, al recibir nuestro correo respóndenos con la foto del carnet.</p></div>
+          <div class="field"><label for="obs">Observaciones (alergias, necesidades…)</label><textarea id="obs" name="observaciones" rows="3"></textarea></div>
+        </fieldset>
+        <fieldset>
+          <legend>4. Autorizaciones</legend>
+          <label class="check"><input type="checkbox" name="whatsapp" value="si" /> ¿Te podemos añadir al grupo de WhatsApp? Solo se usará para avisos importantes.</label>
+          <label class="check"><input type="checkbox" name="imagenes" value="si" /> Autorizo a tomar imágenes de la actividad con fines educativos y de difusión.</label>
+          <label class="check"><input type="checkbox" name="privacidad" required /> He leído y acepto la <a href="/privacidad/" target="_blank">política de privacidad</a>.</label>
+        </fieldset>
+        <button class="btn" type="submit">Enviar inscripción</button>
+      </form>
+    </div>
+  </section>
+  <script define:vars={{ data }}>
+    const schools = JSON.parse(data);
+    const col = document.getElementById('colegio'), act = document.getElementById('actividad');
+    const all = [...act.options].map(o => [o.value, o.text]);
+    function sync() {
+      const s = schools.find(x => x.slug === col.value);
+      const keep = act.value;
+      act.innerHTML = '';
+      all.filter(([v]) => !s || s.acts.includes(v)).forEach(([v, t]) => act.add(new Option(t, v)));
+      if ([...act.options].some(o => o.value === keep)) act.value = keep;
+    }
+    const q = new URLSearchParams(location.search);
+    if (q.get('colegio')) col.value = q.get('colegio');
+    if (q.get('actividad')) act.value = q.get('actividad');
+    col.addEventListener('change', sync); sync();
+  </script>
+</Base>
