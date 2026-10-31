@@ -7,7 +7,7 @@ export const site = {
   region: 'La Rioja',
   ages: 'De 6 a 12 años',
   schedule: 'De 16:00 a 17:30',
-  course: '2025-26',
+  course: '2025‑26',
   // Endpoint que recibe el formulario de inscripción (Formspree, Netlify Forms, Web3Forms...)
   formEndpoint: 'https://formspree.io/f/TU_ID_AQUI',
 };

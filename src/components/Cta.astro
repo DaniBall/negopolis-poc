@@ -5,5 +5,5 @@ const { href = '/inscripcion/', text = 'Inscribirme' } = Astro.props;
 <section><div class="wrap"><div class="cta">
   <h2>Inscripción curso {site.course}</h2>
   <p>Para cualquier duda: <a href={`mailto:${site.email}`}>{site.email}</a></p>
-  <p><a class="btn" href={href}>{text}</a> &nbsp; <a class="btn btn-ghost" href={`https://wa.me/${site.phoneIntl.replace('+','')}`}>WhatsApp {site.phone}</a></p>
+  <div class="btns center-btns"><a class="btn" href={href}>{text}</a><a class="btn btn-ghost" href={`https://wa.me/${site.phoneIntl.replace('+','')}`}>WhatsApp {site.phone}</a></div>
 </div></div></section>
