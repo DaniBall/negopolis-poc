@@ -1,7 +1,7 @@
 name: Deploy to GitHub Pages
 on:
   push:
-    branches: [main, claude/quirky-cori-5u2koa]
+    branches: [main]
   workflow_dispatch:
 permissions:
   contents: read
